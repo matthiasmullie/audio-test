@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Multiple audio test</title>
+</head>
+<body>
+<button onclick="next()">Play</button>
+<script>
+  const url = 'https://analytics.wikimedia.org/published/datasets/ml/tts/experiment-v2/'
+  let manifest;
+  let i = 0;
+
+  const load = async () => {
+    const response = await fetch(`${ url }enwiki/663/1376497718/manifest.json`); // Apollo 8
+    manifest = await response.json();
+  };
+
+  const next = () => {
+    const section = manifest.sections[i];
+    if (!section) {
+      return;
+    }
+
+    i++;
+
+    const audio = new Audio(`${ url }${section.audio.key}`);
+    audio.preload = 'auto';
+    audio.play();
+    audio.addEventListener('ended', () => next());
+  };
+
+  load();
+</script>
+</body>
+</html>
